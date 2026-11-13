@@ -41,6 +41,8 @@ meter { width: 6rem; }
 
 .accents { gap: 0.25rem; }
 .accents button { min-width: 2.25rem; padding: 0.3rem 0; font-size: 1.05rem; }
+.accents .maj { padding: 0.3rem 0.6rem; font-size: 0.9rem; }
+.accents .maj[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: Canvas; }
 
 textarea {
   flex: 1;

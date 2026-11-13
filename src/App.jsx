@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { supabase, listEntries, saveEntry } from './db.js'
 
-const ACCENTS = [...'àâäæçéèêëîïôœùûüÿ«»']
+const ACCENTS = [...'éèêëàâîïôûùüçœæäÿ\'«»·']
 // Official TCF Canada word ranges per task.
 const TARGETS = { T1: [60, 120], T2: [120, 150], T3: [120, 180] }
 // TCF counts whatever sits between two spaces as one word ("c'est-à-dire" = 1).
@@ -52,6 +52,7 @@ function Editor() {
   const [entries, setEntries] = useState([])
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState('')
+  const [caps, setCaps] = useState(false) // Maj toggle for the accent buttons
   const textarea = useRef(null)
   const drawer = useRef(null)
 
@@ -121,10 +122,14 @@ function Editor() {
       </header>
 
       <div className="accents" role="toolbar" aria-label="French characters">
-        {ACCENTS.map((ch) => (
-          // preventDefault on mousedown keeps focus (and the cursor) in the textarea.
-          <button key={ch} onMouseDown={(e) => e.preventDefault()} onClick={() => insert(ch)}>{ch}</button>
-        ))}
+        {/* preventDefault on mousedown keeps focus (and the cursor) in the textarea. */}
+        <button className="maj" aria-pressed={caps} onMouseDown={(e) => e.preventDefault()} onClick={() => setCaps(!caps)}>
+          Maj
+        </button>
+        {ACCENTS.map((lower) => {
+          const ch = caps ? lower.toUpperCase() : lower // symbols have no uppercase, so they stay as they are
+          return <button key={lower} onMouseDown={(e) => e.preventDefault()} onClick={() => insert(ch)}>{ch}</button>
+        })}
       </div>
 
       <textarea

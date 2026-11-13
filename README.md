@@ -2,7 +2,7 @@
 
 A plain writing box for TCF Canada *expression écrite* practice. No spellcheck, no autocorrect, no suggestions. Entries are saved to Supabase, so they show up on every device you sign in on.
 
-- Accent toolbar (`à â ä æ ç é è ê ë î ï ô œ ù û ü ÿ « »`) that inserts at the cursor
+- Accent toolbar (`é è ê ë à â î ï ô û ù ü ç œ æ ä ÿ ' « » ·`) that inserts at the cursor, with a **Maj** toggle that switches the buttons to capitals (É È Ç Œ ...)
 - Task selector (T1 / T2 / T3) with the word range for each task: 60–120, 120–150, 120–180
 - Live word count, counted the TCF way (anything between two spaces is one word)
 - Save Entry button, or Ctrl+S
