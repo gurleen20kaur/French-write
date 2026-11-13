@@ -1,0 +1,93 @@
+:root {
+  color-scheme: light dark; /* system colors below follow the device's light/dark setting */
+  --line: light-dark(#d9d9d9, #3a3a3a);
+  --muted: light-dark(#666, #a0a0a0);
+  --accent: light-dark(#1d4ed8, #8ab4ff);
+  --ok: light-dark(#15803d, #6fd08c);
+  --over: light-dark(#b91c1c, #ff8a8a);
+  font: 16px/1.5 system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+
+main { display: flex; flex-direction: column; height: 100dvh; }
+
+button, select, input {
+  font: inherit;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: Canvas;
+  color: CanvasText;
+}
+button { cursor: pointer; }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary { background: var(--accent); border-color: var(--accent); color: Canvas; }
+
+.bar, .accents {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.count { font-variant-numeric: tabular-nums; color: var(--muted); }
+.count.ok { color: var(--ok); }
+.count.over { color: var(--over); }
+meter { width: 6rem; }
+.status { flex: 1 1 10rem; /* wraps to its own line on phones instead of squeezing */ color: var(--muted); font-size: 0.875rem; }
+
+.accents { gap: 0.25rem; }
+.accents button { min-width: 2.25rem; padding: 0.3rem 0; font-size: 1.05rem; }
+
+textarea {
+  flex: 1;
+  width: 100%;
+  padding: 1.5rem max(1rem, calc((100vw - 48rem) / 2)); /* centers a ~48rem column */
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: Canvas;
+  color: CanvasText;
+  font: 1.15rem/1.7 Georgia, 'Times New Roman', serif;
+}
+
+.drawer {
+  width: min(26rem, 100vw);
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--line);
+}
+.drawer::backdrop { background: rgb(0 0 0 / 0.3); }
+.drawer-body { display: flex; flex-direction: column; gap: 0.75rem; height: 100%; padding: 1rem; }
+.drawer header { display: flex; justify-content: space-between; align-items: center; }
+.drawer h2 { margin: 0; font-size: 1.1rem; }
+.drawer ul { flex: 1; overflow-y: auto; margin: 0; padding: 0; list-style: none; }
+.drawer li button {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  font-size: 0.875rem;
+}
+.drawer li span {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.muted { color: var(--muted); }
+
+.signin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(20rem, 90vw);
+  margin: 20dvh auto 0;
+}
+.signin h1 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+.error { margin: 0; color: var(--over); }
