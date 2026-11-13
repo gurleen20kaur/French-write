@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { supabase, listEntries, saveEntry } from './db.js'
 
-const ACCENTS = [...'éèêëàâîïôûùüçœæäÿ\'«»·']
+const ACCENTS = [...'éèêëàâîïôûùüçœæ\'«»·']
 // Official TCF Canada word ranges per task.
 const TARGETS = { T1: [60, 120], T2: [120, 150], T3: [120, 180] }
 // TCF counts whatever sits between two spaces as one word ("c'est-à-dire" = 1).
