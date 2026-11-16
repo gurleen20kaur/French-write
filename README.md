@@ -3,8 +3,9 @@
 A plain writing box for TCF Canada *expression écrite* practice. No spellcheck, no autocorrect, no suggestions. Entries are saved to Supabase, so they show up on every device you sign in on.
 
 - Accent toolbar (`é è ê ë à â î ï ô û ù ü ç œ æ ' « » ·`) that inserts at the cursor, with a **Maj** toggle that switches the buttons to capitals (É È Ç Œ ...)
+- Question box above the editor: paste the task prompt, click ▾ to expand it. It is saved with the entry and comes back when you reopen it from History
 - Task selector (T1 / T2 / T3) with the word range for each task: 60–120, 120–150, 120–180
-- Live word count, counted the TCF way (anything between two spaces is one word)
+- Live word count, counted the TCF way (anything between two spaces is one word). The bar fills up and turns red once you hit the task's maximum
 - Save Entry button, or Ctrl+S
 - History panel with search. Type `T2` in the search box to see only T2 entries. Click an entry to reload it.
 - The text you are typing is kept as a draft on the device, so a refresh does not wipe it
@@ -53,6 +54,9 @@ npm run dev
 To use the cloud database locally, copy `.env.example` to `.env.local` and fill in the same two values. Without them the app runs in local mode: it works, but entries stay in that one browser and the top bar says "Local mode: not synced".
 
 ## Good to know
+
+- Set up the database before the question box existed? Run this once in the Supabase SQL Editor, or saving will fail:
+  `alter table entries add column question text not null default '';`
 
 - Your entries are protected by Row Level Security. The key in the website is public by design and can read nothing until you sign in, and then only your own rows.
 - Android keyboards (Gboard and others) can still show their own suggestion strip. A website cannot switch that off. Turn off suggestions in the keyboard's settings if you want true exam conditions on a phone.

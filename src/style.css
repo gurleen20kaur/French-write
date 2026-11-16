@@ -37,6 +37,10 @@ button.primary { background: var(--accent); border-color: var(--accent); color: 
 .count.ok { color: var(--ok); }
 .count.over { color: var(--over); }
 meter { width: 6rem; }
+/* Word limit reached: bar is full (max = limit) and turns red. */
+meter.full::-webkit-meter-optimum-value,
+meter.full::-webkit-meter-suboptimum-value { background: var(--over); }
+meter.full::-moz-meter-bar { background: var(--over); }
 .status { flex: 1 1 10rem; /* wraps to its own line on phones instead of squeezing */ color: var(--muted); font-size: 0.875rem; }
 
 .accents { gap: 0.25rem; }
@@ -44,7 +48,24 @@ meter { width: 6rem; }
 .accents .maj { padding: 0.3rem 0.6rem; font-size: 0.9rem; }
 .accents .maj[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: Canvas; }
 
-textarea {
+.question {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 0.5rem max(1rem, calc((100vw - 48rem) / 2));
+  border-bottom: 1px solid var(--line);
+}
+.question textarea {
+  flex: 1;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  resize: vertical;
+  font: 0.95rem/1.5 system-ui, sans-serif;
+}
+.drawer li em { display: block; margin-top: 0.25rem; overflow-wrap: anywhere; }
+
+main > textarea {
   flex: 1;
   width: 100%;
   padding: 1.5rem max(1rem, calc((100vw - 48rem) / 2)); /* centers a ~48rem column */

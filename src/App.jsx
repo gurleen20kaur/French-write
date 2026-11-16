@@ -47,7 +47,9 @@ function SignIn() {
 
 function Editor() {
   const [text, setText] = useState(() => localStorage.getItem('draft') ?? '')
-  const [saved, setSaved] = useState('') // content as last saved or loaded
+  const [question, setQuestion] = useState(() => localStorage.getItem('question') ?? '')
+  const [qOpen, setQOpen] = useState(false)
+  const [saved, setSaved] = useState(['', '']) // [text, question] as last saved or loaded
   const [task, setTask] = useState('T1')
   const [entries, setEntries] = useState([])
   const [query, setQuery] = useState('')
@@ -58,13 +60,15 @@ function Editor() {
 
   // Draft survives a refresh or a closed tab (this device only).
   useEffect(() => localStorage.setItem('draft', text), [text])
+  useEffect(() => localStorage.setItem('question', question), [question])
   useEffect(() => {
     listEntries().then(setEntries).catch((e) => setStatus(`History failed to load: ${e.message}`))
   }, [])
 
   const words = countWords(text)
   const [min, max] = TARGETS[task]
-  const dirty = words > 0 && text !== saved
+  const full = words >= max
+  const dirty = words > 0 && (text !== saved[0] || question !== saved[1])
 
   function insert(ch) {
     const el = textarea.current
@@ -80,9 +84,9 @@ function Editor() {
     if (!dirty) return
     setStatus('Saving…')
     try {
-      const row = await saveEntry({ task, content: text, word_count: words })
+      const row = await saveEntry({ task, question, content: text, word_count: words })
       setEntries((list) => [row, ...list])
-      setSaved(text)
+      setSaved([text, question])
       setStatus('Saved ✓')
     } catch (e) {
       setStatus(`Not saved: ${e.message}`)
@@ -90,10 +94,11 @@ function Editor() {
   }
 
   // Swap the editor content (new page or a history entry), guarding unsaved text.
-  function replace(content, nextTask = task) {
+  function replace(content, nextTask = task, nextQuestion = '') {
     if (dirty && !confirm('Discard the unsaved text?')) return
     setText(content)
-    setSaved(content)
+    setQuestion(nextQuestion)
+    setSaved([content, nextQuestion])
     setTask(nextTask)
     setStatus('')
     drawer.current.close()
@@ -101,7 +106,7 @@ function Editor() {
   }
 
   const q = query.trim().toLowerCase()
-  const shown = entries.filter((e) => !q || e.task.toLowerCase() === q || e.content.toLowerCase().includes(q))
+  const shown = entries.filter((e) => !q || e.task.toLowerCase() === q || (e.content + ' ' + (e.question ?? '')).toLowerCase().includes(q))
 
   return (
     <main>
@@ -109,10 +114,10 @@ function Editor() {
         <select value={task} onChange={(e) => setTask(e.target.value)} aria-label="Task">
           {Object.keys(TARGETS).map((t) => <option key={t}>{t}</option>)}
         </select>
-        <span className={words < min ? 'count' : words > max ? 'count over' : 'count ok'}>
+        <span className={words < min ? 'count' : full ? 'count over' : 'count ok'}>
           {words} / {min}–{max} words
         </span>
-        <meter value={words} min={0} max={max * 1.25} low={min} high={max} optimum={(min + max) / 2} />
+        <meter className={full ? 'full' : ''} value={words} min={0} max={max} low={min} high={max} optimum={(min + max) / 2} />
         <span className="status" role="status">
           {status || (!supabase && 'Local mode: not synced')}
         </span>
@@ -130,6 +135,21 @@ function Editor() {
           const ch = caps ? lower.toUpperCase() : lower // symbols have no uppercase, so they stay as they are
           return <button key={lower} onMouseDown={(e) => e.preventDefault()} onClick={() => insert(ch)}>{ch}</button>
         })}
+      </div>
+
+      <div className="question">
+        <textarea
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          rows={qOpen ? 8 : 1}
+          placeholder="Collez la question ici…"
+          aria-label="Question"
+          lang="fr"
+          spellCheck={false}
+        />
+        <button onClick={() => setQOpen(!qOpen)} aria-expanded={qOpen} aria-label={qOpen ? 'Collapse question' : 'Expand question'}>
+          {qOpen ? '▴' : '▾'}
+        </button>
       </div>
 
       <textarea
@@ -161,8 +181,9 @@ function Editor() {
           <ul>
             {shown.map((e) => (
               <li key={e.id}>
-                <button onClick={() => replace(e.content, e.task)}>
+                <button onClick={() => replace(e.content, e.task, e.question ?? '')}>
                   <strong>{e.task}</strong> · {e.word_count} words · {new Date(e.created_at).toLocaleString()}
+                  {e.question && <em>{e.question.slice(0, 100)}</em>}
                   <span>{e.content.slice(0, 140)}</span>
                 </button>
               </li>

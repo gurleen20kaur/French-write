@@ -4,6 +4,7 @@ create table entries (
   id         bigint generated always as identity primary key,
   user_id    uuid not null default auth.uid() references auth.users on delete cascade,
   task       text not null check (task in ('T1', 'T2', 'T3')),
+  question   text not null default '',
   content    text not null,
   word_count int  not null,
   created_at timestamptz not null default now()
@@ -17,3 +18,6 @@ create policy "own entries" on entries
   for all to authenticated
   using ((select auth.uid()) = user_id)
   with check ((select auth.uid()) = user_id);
+
+-- Already have the table from before the question box? Run just this line instead:
+-- alter table entries add column question text not null default '';
