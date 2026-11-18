@@ -171,6 +171,9 @@ function Editor() {
         data-enable-grammarly="false"
       />
 
+      {/* Bottom right, far from Save. replace() asks before wiping unsaved text. */}
+      <button className="clear" onClick={() => replace('')}>Clear</button>
+
       <dialog ref={drawer} className="drawer" onClick={(e) => e.target === drawer.current && drawer.current.close()}>
         <div className="drawer-body">
           <header>

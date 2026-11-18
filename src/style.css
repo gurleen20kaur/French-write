@@ -69,6 +69,7 @@ main > textarea {
   flex: 1;
   width: 100%;
   padding: 1.5rem max(1rem, calc((100vw - 48rem) / 2)); /* centers a ~48rem column */
+  padding-bottom: 4rem; /* room for the Clear button */
   border: 0;
   outline: 0;
   resize: none;
@@ -76,6 +77,8 @@ main > textarea {
   color: CanvasText;
   font: 1.15rem/1.7 Georgia, 'Times New Roman', serif;
 }
+
+.clear { position: fixed; right: 1rem; bottom: 1rem; }
 
 .drawer {
   width: min(26rem, 100vw);
